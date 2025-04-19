@@ -115,4 +115,6 @@ MIT License. Free to use, modify, and learn from.
 ## Developed by
 
 Karthik B  
-Computer Science Student | ML | Cybersecurity | System Design
+Sai Sathiya Krishna AR
+Priyanka G
+Adharsh Ramakrishnan
