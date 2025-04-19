@@ -115,6 +115,6 @@ MIT License. Free to use, modify, and learn from.
 ## Developed by
 
 Karthik B  
-Sai Sathiya Krishna AR
-Priyanka G
+Sai Sathiya Krishna AR   
+Priyanka G   
 Adharsh Ramakrishnan
