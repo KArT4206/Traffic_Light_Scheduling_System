@@ -1,5 +1,7 @@
+
 # Traffic_Light_Scheduling_System
-An adaptive traffic signal scheduling system that calculates green light durations based on vehicle queue lengths from four directions (North, South, East, West). Supports both CSV dataset input and manual input to simulate real-world traffic cycles for optimized flow.
+
+An adaptive traffic signal scheduling system that calculates green light durations based on vehicle queue lengths from four directions (North, South, East, West). It supports both CSV dataset input and manual input to simulate real-world traffic cycles for optimized flow.
 
 ## Features
 
@@ -7,23 +9,25 @@ An adaptive traffic signal scheduling system that calculates green light duratio
 - Simulates real-time traffic signal scheduling
 - Dynamically allocates green light duration based on traffic volume
 - Supports multiple traffic cycles
+- Saves the traffic cycle data to a text file if required
+- Calculates average vehicles per minute for each direction at the end of the simulation
 - Continuously looped interaction (run again or exit)
 - Easy-to-read console output
 
 ## Technologies Used
 
-- Language: C  
-- Input Format: Manual input or CSV file (`traffic_input.csv`)  
-- Simulation Type: Terminal-based
+- **Language**: C  
+- **Input Format**: Manual input or CSV file (`traffic_input.csv`)  
+- **Simulation Type**: Terminal-based  
 
 ## Algorithmic Strategy
 
 This project uses a greedy scheduling algorithm inspired by:
 
-- Priority Scheduling: Lanes with higher vehicle queues get more green light time.
-- Shortest Job First (SJF) (Inverted): Lanes with lower queue counts still receive minimum time; green time is proportional to traffic.
+- **Priority Scheduling**: Lanes with higher vehicle queues get more green light time.
+- **Shortest Job First (SJF) (Inverted)**: Lanes with lower queue counts still receive minimum time; green time is proportional to traffic.
 
-Green Time Formula:  
+### Green Time Formula:  
 `Green Time = (Queue for Direction / Total Queue) × Total Cycle Time (120 seconds)`
 
 ## Input File Format (`traffic_input.csv`)
@@ -99,6 +103,12 @@ North: 21 seconds (Queue: 25 vehicles)
 South: 25 seconds (Queue: 30 vehicles)
 East : 34 seconds (Queue: 40 vehicles)
 West : 40 seconds (Queue: 35 vehicles)
+
+Average Vehicles Per Minute:
+North: 35.00 cars per minute
+South: 40.00 cars per minute
+East : 50.00 cars per minute
+West : 45.00 cars per minute
 ```
 
 ## Future Improvements
