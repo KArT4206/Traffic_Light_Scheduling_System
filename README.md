@@ -22,13 +22,39 @@ An adaptive traffic signal scheduling system that calculates green light duratio
 
 ## Algorithmic Strategy
 
-This project uses a greedy scheduling algorithm inspired by:
+This project dynamically allocates green light durations using **two algorithmic approaches**, based on traffic queue volumes from each direction:
 
-- **Priority Scheduling**: Lanes with higher vehicle queues get more green light time.
-- **Shortest Job First (SJF) (Inverted)**: Lanes with lower queue counts still receive minimum time; green time is proportional to traffic.
+###  1. Greedy with Priority Scheduling
 
-### Green Time Formula:  
-`Green Time = (Queue for Direction / Total Queue) × Total Cycle Time (120 seconds)`
+- **Concept:**  
+  Allocate green time in proportion to the number of vehicles in each direction. More vehicles = more time.
+
+- **Inspiration:**  
+  - **Priority Scheduling:** Lanes with higher vehicle queues get higher priority.  
+  - **Inverted Shortest Job First (SJF):** Even lanes with smaller queues are assigned a minimum base green time.
+
+- **Formula Used:**  
+  `Green Time = (Queue for Direction / Total Queue) × Total Cycle Time (120 seconds)`
+
+- **Use Case:**  
+  Works well for approximate fair sharing of time and fast computation.
+
+###  2. Dynamic Programming (DP) for Constrained Optimization
+
+- **Concept:**  
+  Minimizes the total **squared error** between the exact (ideal) green times and the allocated integer times, while ensuring the total time equals 120 seconds.
+
+- **How it Works:**  
+  - Breaks the total 120 seconds into all possible allocations.  
+  - Uses a bottom-up DP table (`dp[i][t]`) to find the best allocation for each lane.  
+  - Cost function:  
+    `Cost = sum((allocated_time_i - exact_time_i)^2)`
+
+- **Inspiration:**  
+  - Similar to the **Knapsack Problem** where we try all allocations for the best minimum error.
+
+- **Use Case:**  
+  Ensures a **more optimal** distribution of green time under integer constraints.
 
 ## Input File Format (`traffic_input.csv`)
 
