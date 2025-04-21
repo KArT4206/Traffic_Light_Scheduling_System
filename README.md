@@ -86,7 +86,7 @@ Place this file in the same folder as the compiled binary when running with data
 
 ## Time and Space Complexity
 
-for Greedy with Priority Scheduling
+- **for Greedy with Priority Scheduling :**
 
 | Operation              | Complexity |
 |------------------------|------------|
@@ -98,7 +98,7 @@ for Greedy with Priority Scheduling
 Where `n` is the number of traffic cycles.
 
 
-for Dynamic Programming (DP) for Constrained Optimization
+- **for Dynamic Programming (DP) for Constrained Optimization :**
 
 | Operation              | Complexity |
 |------------------------|------------|
