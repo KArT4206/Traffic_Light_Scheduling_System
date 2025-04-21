@@ -86,6 +86,8 @@ Place this file in the same folder as the compiled binary when running with data
 
 ## Time and Space Complexity
 
+for Greedy with Priority Scheduling
+
 | Operation              | Complexity |
 |------------------------|------------|
 | Reading CSV Input      | O(n)       |
