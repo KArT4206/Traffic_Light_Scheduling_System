@@ -95,6 +95,18 @@ Place this file in the same folder as the compiled binary when running with data
 
 Where `n` is the number of traffic cycles.
 
+
+for Dynamic Programming (DP) for Constrained Optimization
+
+| Operation              | Complexity |
+|------------------------|------------|
+| Reading CSV Input      | O(n)       |
+| Manual Input Processing| O(n)       |
+| Scheduling per Cycle   | O(n^2)     |
+| Total Space Used       | O(n)       |
+
+Where n is the total cycle time (i.e., TOTAL_CYCLE_TIME = 120).
+
 ## How to Compile and Run
 
 ### Using GCC (Linux/Mac):
