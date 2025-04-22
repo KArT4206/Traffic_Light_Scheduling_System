@@ -13,6 +13,7 @@ An adaptive traffic signal scheduling system that calculates green light duratio
 - Calculates average vehicles per minute for each direction at the end of the simulation
 - Continuously looped interaction (run again or exit)
 - Easy-to-read console output
+- Python script to auto-generate `traffic_input.csv` from traffic camera videos using YOLOv3 object detection
 
 ## Technologies Used
 
@@ -83,6 +84,17 @@ North,South,East,West
 ```
 
 Place this file in the same folder as the compiled binary when running with dataset input.
+
+## Machine Learning Integration (Traffic Input Generation)
+
+A Python script uses YOLOv3 to detect vehicles from video sources or image folders and generates a `traffic_input.csv` file with traffic counts per direction. This allows automated and accurate real-world data collection to feed into the scheduling system.
+
+### How it Works
+
+- Loads `yolov3.cfg` and `yolov3.weights`
+- Processes video files from North, South, East, and West directions
+- Detects vehicles and counts cars/bikes using pre-defined class IDs
+- Saves the summed counts to `traffic_input.csv`
 
 ## Time and Space Complexity
 
