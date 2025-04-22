@@ -88,6 +88,7 @@ Place this file in the same folder as the compiled binary when running with data
 ## Machine Learning Integration (Traffic Input Generation)
 
 A Python script uses YOLOv3 to detect vehicles from video sources or image folders and generates a `traffic_input.csv` file with traffic counts per direction. This allows automated and accurate real-world data collection to feed into the scheduling system.
+Gdrive Link - https://drive.google.com/drive/folders/1Okddp-q5G6UFtFVN61IRPc119WbgSWd9?usp=sharing
 
 ### How it Works
 
