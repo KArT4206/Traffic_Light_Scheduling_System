@@ -173,7 +173,7 @@ West : 45.00 cars per minute
 
 ## License
 
-MIT License. Free to use, modify, and learn from.
+MIT License.
 
 ## Developed by
 
