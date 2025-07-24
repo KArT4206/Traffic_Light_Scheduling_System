@@ -173,7 +173,7 @@ West : 45.00 cars per minute
 
 ## License
 
-MIT License.
+GPL-3.0 license.
 
 ## Developed by
 
