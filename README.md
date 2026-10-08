@@ -1,182 +1,46 @@
+# Traffic Light Scheduling System
 
-# Traffic_Light_Scheduling_System
+An adaptive traffic-signal scheduler that decides how long each of four approaches (North, South, East, West) should get a green light, based on how many vehicles are queued on each. It runs as a terminal simulation and accepts either a CSV dataset or manually typed queue lengths.
 
-An adaptive traffic signal scheduling system that calculates green light durations based on vehicle queue lengths from four directions (North, South, East, West). It supports both CSV dataset input and manual input to simulate real-world traffic cycles for optimized flow.
+> This repository documents the project (description, design, screenshots). The source code lives in a private repository.
 
-## Features
+## Screenshots
 
-- Choose between manual input or CSV dataset input
-- Simulates real-time traffic signal scheduling
-- Dynamically allocates green light duration based on traffic volume
-- Supports multiple traffic cycles
-- Saves the traffic cycle data to a text file if required
-- Calculates average vehicles per minute for each direction at the end of the simulation
-- Continuously looped interaction (run again or exit)
-- Easy-to-read console output
-- Python script to auto-generate `traffic_input.csv` from traffic camera videos using YOLOv3 object detection
+| Greedy + priority (CSV dataset) | Dynamic programming (CSV dataset) |
+|---|---|
+| ![Greedy output](docs/images/greedy-dataset.png) | ![DP output](docs/images/dp-dataset.png) |
 
-## Technologies Used
+![DP manual input](docs/images/dp-manual.png)
 
-- **Language**: C  
-- **Input Format**: Manual input or CSV file (`traffic_input.csv`)  
-- **Simulation Type**: Terminal-based  
+## What it does
 
-## Algorithmic Strategy
+- Simulates repeated signal cycles; each cycle has a fixed total of **120 seconds** of green to share between the four directions.
+- Two interchangeable schedulers: **greedy with priority** and **dynamic programming**.
+- Input from `traffic_input.csv` (one row per cycle: `North,South,East,West`) or typed in manually.
+- Optionally saves every cycle to `traffic_report.txt`.
+- Prints the average vehicles per minute for each direction at the end, then offers to run again.
+- A companion YOLOv3 script (not part of the C programs) can build `traffic_input.csv` by counting vehicles in camera footage for each direction.
 
-This project dynamically allocates green light durations using **two algorithmic approaches**, based on traffic queue volumes from each direction:
+## How it works
 
-###  1. Greedy with Priority Scheduling
+### 1. Greedy with priority scheduling
+Green time is proportional to demand: `green = (queue / total queue) x 120 s`. Busier approaches have higher priority and receive more time, while quiet ones still get a base share. It is O(1) per cycle and gives fast, approximately fair splits (e.g. queues 25/30/40/35 produce 23/27/36/32 s).
 
-- **Concept:**  
-  Allocate green time in proportion to the number of vehicles in each direction. More vehicles = more time.
-
-- **Inspiration:**  
-  - **Priority Scheduling:** Lanes with higher vehicle queues get higher priority.  
-  - **Inverted Shortest Job First (SJF):** Even lanes with smaller queues are assigned a minimum base green time.
-
-- **Formula Used:**  
-  `Green Time = (Queue for Direction / Total Queue) × Total Cycle Time (120 seconds)`
-
-- **Use Case:**  
-  Works well for approximate fair sharing of time and fast computation.
-
-###  2. Dynamic Programming (DP) for Constrained Optimization
-
-- **Concept:**  
-  Minimizes the total **squared error** between the exact (ideal) green times and the allocated integer times, while ensuring the total time equals 120 seconds.
-
-- **How it Works:**  
-  - Breaks the total 120 seconds into all possible allocations.  
-  - Uses a bottom-up DP table (`dp[i][t]`) to find the best allocation for each lane.  
-  - Cost function:  
-    `Cost = sum((allocated_time_i - exact_time_i)^2)`
-
-- **Inspiration:**  
-  - Similar to the **Knapsack Problem** where we try all allocations for the best minimum error.
-
-- **Use Case:**  
-  Ensures a **more optimal** distribution of green time under integer constraints.
-
-## Input File Format (`traffic_input.csv`)
+### 2. Dynamic programming
+Proportional shares are fractional, but signals run in whole seconds. The DP picks integer allocations that always sum to exactly 120 s while minimising the total squared error against the ideal fractional times:
 
 ```
-North,South,East,West
-25,30,40,35
-20,25,45,30
-35,20,30,40
-40,30,50,45
-30,20,20,25
-45,35,50,40
-50,40,60,55
-30,25,35,20
-20,15,25,30
-10,5,15,20
-35,25,45,35
-30,20,40,30
-40,30,55,50
-25,15,35,25
-50,45,60,55
-20,30,25,35
-15,10,20,25
-45,35,55,45
-30,40,50,40
-25,20,30,20
+cost = sum_i (allocated_i - exact_i)^2
+dp[i][t] = min over a in [0..t] of dp[i-1][t-a] + (a - exact_i)^2
 ```
 
-Place this file in the same folder as the compiled binary when running with dataset input.
+It fills a table for 4 lanes x 121 time values, then walks it backwards to read off each lane's allocation (a small knapsack-style problem, O(directions x T^2) with T = 120).
 
-## Machine Learning Integration (Traffic Input Generation)
+### Reading the screenshots
+Cycle 1 has queues 25/30/40/35 (130 vehicles). The greedy scheduler gives 23/27/36/32 s; the DP gives 23/28/37/32 s, which uses the leftover seconds where they reduce error most.
 
-A Python script uses YOLOv3 to detect vehicles from video sources or image folders and generates a `traffic_input.csv` file with traffic counts per direction. This allows automated and accurate real-world data collection to feed into the scheduling system.  
-Gdrive Link - https://drive.google.com/drive/folders/1Okddp-q5G6UFtFVN61IRPc119WbgSWd9?usp=sharing
+## Tech stack
+C (GCC), CSV input, terminal UI. Optional: Python + YOLOv3 for dataset generation.
 
-### How it Works
-
-- Loads `yolov3.cfg` and `yolov3.weights`
-- Processes video files from North, South, East, and West directions
-- Detects vehicles and counts cars/bikes using pre-defined class IDs
-- Saves the summed counts to `traffic_input.csv`
-
-## Time and Space Complexity
-
-- **for Greedy with Priority Scheduling :**
-
-| Operation              | Complexity |
-|------------------------|------------|
-| Reading CSV Input      | O(n)       |
-| Manual Input Processing| O(n)       |
-| Scheduling per Cycle   | O(1)       |
-| Total Space Used       | O(1)       |
-
-Where `n` is the number of traffic cycles.
-
-
-- **for Dynamic Programming (DP) for Constrained Optimization :**
-
-| Operation              | Complexity |
-|------------------------|------------|
-| Reading CSV Input      | O(n)       |
-| Manual Input Processing| O(n)       |
-| Scheduling per Cycle   | O(n^2)     |
-| Total Space Used       | O(n)       |
-
-Where n is the total cycle time (i.e., TOTAL_CYCLE_TIME = 120).
-
-## How to Compile and Run
-
-### Using GCC (Linux/Mac):
-
-1. Open terminal and navigate to the project folder.
-2. Compile the code:
-   ```
-   gcc traffic_scheduler.c -o traffic_scheduler
-   ```
-3. Run the program:
-   ```
-   ./traffic_scheduler
-   ```
-
-### Using GCC (Windows):
-
-1. Open CMD or PowerShell and navigate to the project folder.
-2. Compile the code:
-   ```
-   gcc traffic_scheduler.c -o traffic_scheduler.exe
-   ```
-3. Run the program:
-   ```
-   traffic_scheduler.exe
-   ```
-
-## Sample Output
-
-```
---- Traffic Cycle 1 ---
-North: 21 seconds (Queue: 25 vehicles)
-South: 25 seconds (Queue: 30 vehicles)
-East : 34 seconds (Queue: 40 vehicles)
-West : 40 seconds (Queue: 35 vehicles)
-
-Average Vehicles Per Minute:
-North: 35.00 cars per minute
-South: 40.00 cars per minute
-East : 50.00 cars per minute
-West : 45.00 cars per minute
-```
-
-## Future Improvements
-
-- Integrate real-time sensor or camera data
-- GUI/Web-based interface for simulation
-- Include emergency vehicle priority
-- Add traffic prediction using ML
-
-## License
-
-GPL-3.0 license.
-
-## Developed by
-
-Karthik B  
-Priyanka G   
-Adharsh Ramakrishnan
+## Authors
+Karthik B, Priyanka G, Adharsh Ramakrishnan. Licensed under GPL-3.0.
