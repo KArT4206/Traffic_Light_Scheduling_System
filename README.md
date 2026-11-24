@@ -1,5 +1,8 @@
 # Traffic Light Scheduling System
 
+[![License: GPL-3.0](https://img.shields.io/badge/License-GPL--3.0-blue)](LICENSE)
+![Last commit](https://img.shields.io/github/last-commit/KArT4206/Traffic_Light_Scheduling_System)
+
 An adaptive traffic-signal scheduler that decides how long each of four approaches (North, South, East, West) should get a green light, based on how many vehicles are queued on each. It runs as a terminal simulation and accepts either a CSV dataset or manually typed queue lengths.
 
 > This repository documents the project (description, design, screenshots). The source code lives in a private repository.
